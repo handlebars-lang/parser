@@ -1,24 +1,24 @@
-import { BuildAST } from "./lib/ast-builder";
+import { Program, Hash, MustacheStatement, PathExpression } from "./lib/ast-builder";
 
 describe("simple mustache", () => {
-  it("should", () => {
-    BuildAST.Program(
-      {
-        body: [
-          BuildAST.MustacheStatement(
+    it("should", () => {
+        Program(
             {
-              path: BuildAST.PathExpression({ data: true, depth: 0, original: "", parts: [] }, ""),
-              params: [],
-              hash: BuildAST.Hash({ pairs: [] }, ""),
-              escaped: true,
-              strip: { open: false, close: false }
+                body: [
+                    MustacheStatement(
+                        {
+                            path: PathExpression({ data: true, depth: 0, original: "", parts: [] }, ""),
+                            params: [],
+                            hash: Hash({ pairs: [] }, ""),
+                            escaped: true,
+                            strip: { open: false, close: false }
+                        },
+                        ""
+                    )
+                ],
+                blockParams: ["a", "b"]
             },
             ""
-          )
-        ],
-        blockParams: ["a", "b"]
-      },
-      ""
-    );
-  });
+        );
+    });
 });

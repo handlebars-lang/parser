@@ -9,19 +9,29 @@
     "@types/jest": "^24.0.20",
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",
+    "concurrently": "^5.0.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
-    "eslint-plugin-prettier": "^3.1.1",
     "handlebars": "^4.5.1",
+    "husky": "^3.0.9",
     "jest": "^24.9.0",
+    "lint-staged": "^9.4.2",
     "prettier": "^1.18.2",
     "ts-jest": "^24.1.0",
     "typescript": "^3.6.4"
   },
   "scripts": {
-    "test": "jest",
-    "tsc": "tsc"
+    "clean": "rm -rf build",
+    "fix": "npm run format && npm run lintfix",
+    "test-and-build": "concurrently --kill-others-on-fail npm:lint npm:test npm:build",
+    "lint": "eslint '**/*.{js,vue}' ",
+    "format": "prettier --write 'src/**/*.{js,css,json,md,vue}'",
+    "build": "tsc",
+    "test": "jest"
   },
+  "files": [
+    "build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/handlebars-lang/parser.git"
@@ -38,6 +48,15 @@
       "prettier --write",
       "eslint --fix",
       "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

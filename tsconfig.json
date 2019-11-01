@@ -10,7 +10,6 @@
   },
   "exclude": [
     "node_modules",
-    "parser-specification",
     "src/**/*.test.ts",
     "build"
   ]

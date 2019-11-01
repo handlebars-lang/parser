@@ -3,7 +3,6 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
     'prettier/@typescript-eslint',
   ],
   parserOptions: {
@@ -12,6 +11,10 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      {"functions": false}
+    ]
     // Special ESLint rules or overrides go here.
   },
 };
