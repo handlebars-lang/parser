@@ -6,31 +6,117 @@ export function Program(program: ProgramProperties, location: string): AST.Progr
 
 interface ProgramProperties {
     body: AnyStatement[];
-    blockParams: string[];
 }
 
-export function MustacheStatement(statement: MustacheProperties, location: string): AST.MustacheStatement {
+export function MustacheStatement(props: MustacheProperties, location: string): AST.MustacheStatement {
     return {
         type: "MustacheStatement",
+        params: [],
+        strip: NoStrip(),
+        escaped: true,
+        ...props,
+        loc: buildLocation(location)
+    };
+}
+
+export function PartialStatement(statement: PartialStatementProperties, location: string): AST.PartialStatement {
+    return {
+        type: "PartialStatement",
+        params: [],
+        strip: NoStrip(),
+        indent: "",
         ...statement,
         loc: buildLocation(location)
     };
 }
 
-export function Decorator(statement: MustacheProperties, location: string): AST.Decorator {
+export interface PartialStatementProperties {
+    name: AST.PathExpression | AST.SubExpression;
+    params?: AnyExpression[];
+    hash?: AST.Hash;
+    indent?: string;
+    strip?: StripFlags;
+}
+
+export function Decorator(props: MustacheProperties, location: string): AST.Decorator {
     return {
         type: "Decorator",
-        ...statement,
+        params: [],
+        strip: NoStrip(),
+        escaped: true,
+        ...props,
         loc: buildLocation(location)
     };
 }
 
 interface MustacheProperties {
     path: AST.PathExpression | AnyLiteral;
-    params: AnyExpression[];
-    hash: AST.Hash;
-    escaped: boolean;
-    strip: StripFlags;
+    params?: AnyExpression[];
+    hash?: AST.Hash;
+    escaped?: boolean;
+    strip?: StripFlags;
+}
+
+export function BlockStatement(props: BlockProperties, location: string): AST.BlockStatement {
+    return {
+        type: "BlockStatement",
+        params: [],
+        openStrip: NoStrip(),
+        closeStrip: NoStrip(),
+        ...props,
+        loc: buildLocation(location)
+    };
+}
+
+interface BlockProperties {
+    path: AST.PathExpression;
+    params?: AnyExpression[];
+    hash?: AST.Hash;
+    program: AST.Program;
+    inverse?: AST.Program;
+    openStrip: StripFlags;
+    inverseStrip?: StripFlags;
+    closeStrip: StripFlags;
+}
+
+export function DecoratorBlock(props: DecoratorBlockProperties, location: string): AST.DecoratorBlock {
+    return {
+        type: "DecoratorBlock",
+        params: [],
+        openStrip: NoStrip(),
+        closeStrip: NoStrip(),
+        ...props,
+        loc: buildLocation(location)
+    };
+}
+
+interface DecoratorBlockProperties {
+    path: AST.PathExpression;
+    params?: AnyExpression[];
+    hash?: AST.Hash;
+    program: AST.Program;
+    openStrip?: StripFlags;
+    closeStrip?: StripFlags;
+}
+
+export function PartialBlockStatement(props: PartialBlockProperties, location: string): AST.PartialBlockStatement {
+    return {
+        type: "PartialBlockStatement",
+        params: [],
+        openStrip: NoStrip(),
+        closeStrip: NoStrip(),
+        ...props,
+        loc: buildLocation(location)
+    };
+}
+
+export interface PartialBlockProperties {
+    name: AST.PathExpression | AST.SubExpression;
+    params?: AnyExpression[];
+    hash?: AST.Hash;
+    program: AST.Program;
+    openStrip?: StripFlags;
+    closeStrip?: StripFlags;
 }
 
 export function ContentStatement(statement: ContentProperties, location: string): AST.ContentStatement {
@@ -43,12 +129,13 @@ export function ContentStatement(statement: ContentProperties, location: string)
 
 interface ContentProperties {
     value: string;
-    original: StripFlags;
+    original: string;
 }
 
 export function CommentStatement(statement: CommentProperties, location: string): AST.CommentStatement {
     return {
         type: "CommentStatement",
+        strip: NoStrip(),
         ...statement,
         loc: buildLocation(location)
     };
@@ -56,102 +143,45 @@ export function CommentStatement(statement: CommentProperties, location: string)
 
 export interface CommentProperties {
     value: string;
-    strip: StripFlags;
+    strip?: StripFlags;
 }
 
-export function BlockStatement(statement: BlockProperties, location: string): AST.BlockStatement {
-    return {
-        type: "BlockStatement",
-        ...statement,
-        loc: buildLocation(location)
-    };
-}
-
-export function DecoratorBlock(statement: BlockProperties, location: string): AST.DecoratorBlock {
-    return {
-        type: "DecoratorBlock",
-        ...statement,
-        loc: buildLocation(location)
-    };
-}
-
-interface BlockProperties {
-    path: AST.PathExpression;
-    params: AnyExpression[];
-    hash: AST.Hash;
-    program: AST.Program;
-    inverse: AST.Program;
-    openStrip: StripFlags;
-    inverseStrip: StripFlags;
-    closeStrip: StripFlags;
-}
-
-export function PartialStatement(statement: PartialStatementProperties, location: string): AST.PartialStatement {
-    return {
-        type: "PartialStatement",
-        ...statement,
-        loc: buildLocation(location)
-    };
-}
-
-export interface PartialStatementProperties {
-    name: AST.PathExpression | AST.SubExpression;
-    params: AnyExpression[];
-    hash: AST.Hash;
-    indent: string;
-    strip: StripFlags;
-}
-
-export function PartialBlockStatement(statement: PartialBlockProperties, location: string): AST.PartialBlockStatement {
-    return {
-        type: "PartialBlockStatement",
-        ...statement,
-        loc: buildLocation(location)
-    };
-}
-
-export interface PartialBlockProperties {
-    name: AST.PathExpression | AST.SubExpression;
-    params: AnyExpression[];
-    hash: AST.Hash;
-    program: AST.Program;
-    openStrip: StripFlags;
-    closeStrip: StripFlags;
-}
-
-export function PathExpression(pathExpression: PathExpressionProperties, location: string): AST.PathExpression {
+export function PathExpression(props: PathExpressionProperties, location: string): AST.PathExpression {
     return {
         type: "PathExpression",
-        ...pathExpression,
+        data: false,
+        depth: 0,
+        ...props,
         loc: buildLocation(location)
     };
 }
 
 export interface PathExpressionProperties {
-    data: boolean;
-    depth: number;
+    data?: boolean;
+    depth?: number;
     parts: string[];
     original: string;
 }
 
-export function SubExpression(subExpression: SubExpressionProperties, location: string): AST.SubExpression {
+export function SubExpression(props: SubExpressionProperties, location: string): AST.SubExpression {
     return {
         type: "SubExpression",
-        ...subExpression,
+        params: [],
+        ...props,
         loc: buildLocation(location)
     };
 }
 
 export interface SubExpressionProperties {
     path: AST.PathExpression;
-    params: AnyExpression[];
-    hash: AST.Hash;
+    params?: AnyExpression[];
+    hash?: AST.Hash;
 }
 
-export function StringLiteral(stringLiteral: StringLiteralProperties, location: string): AST.StringLiteral {
+export function StringLiteral(props: StringLiteralProperties, location: string): AST.StringLiteral {
     return {
         type: "StringLiteral",
-        ...stringLiteral,
+        ...props,
         loc: buildLocation(location)
     };
 }
@@ -161,10 +191,10 @@ export interface StringLiteralProperties {
     original: string;
 }
 
-export function NumberLiteral(numberLiteral: NumberLiteral, location: string): AST.NumberLiteral {
+export function NumberLiteral(props: NumberLiteral, location: string): AST.NumberLiteral {
     return {
         type: "NumberLiteral",
-        ...numberLiteral,
+        ...props,
         loc: buildLocation(location)
     };
 }
@@ -174,10 +204,10 @@ export interface NumberLiteral {
     original: number;
 }
 
-export function BooleanLiteral(booleanLiteral: BooleanLiteralProperties, location: string): AST.BooleanLiteral {
+export function BooleanLiteral(props: BooleanLiteralProperties, location: string): AST.BooleanLiteral {
     return {
         type: "BooleanLiteral",
-        ...booleanLiteral,
+        ...props,
         loc: buildLocation(location)
     };
 }
@@ -201,10 +231,10 @@ export function NullLiteral(location: string): AST.UndefinedLiteral {
     };
 }
 
-export function Hash(hash: HashProperties, location: string): AST.Hash {
+export function Hash(props: HashProperties, location: string): AST.Hash {
     return {
         type: "Hash",
-        ...hash,
+        ...props,
         loc: buildLocation(location)
     };
 }
@@ -226,12 +256,16 @@ export interface HashPairProperties {
     value: AnyExpression;
 }
 
-function buildLocation(location: string, source?: string): AST.SourceLocation {
+function buildLocation(location?: string, source?: string): AST.SourceLocation {
     return {
         source: source || "",
         start: { column: 0, line: 0 },
         end: { column: 0, line: 0 }
     };
+}
+
+function NoStrip(): StripFlags {
+    return { open: false, close: false };
 }
 
 export type AnyStatement =

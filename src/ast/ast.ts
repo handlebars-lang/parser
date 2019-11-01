@@ -5,7 +5,16 @@ export namespace AST {
         loc: SourceLocation;
     }
 
+    export interface Program extends Node {
+        body: Statement[];
+    }
+
+    export interface Statement extends Node {}
+
     export interface SourceLocation {
+        /**
+         * The name of the source-file of this node
+         */
         source: string;
         start: Position;
         end: Position;
@@ -16,18 +25,11 @@ export namespace AST {
         column: number;
     }
 
-    export interface Program extends Node {
-        body: Statement[];
-        blockParams: string[];
-    }
-
-    export interface Statement extends Node {}
-
     export interface MustacheStatement extends Statement {
         type: "MustacheStatement";
         path: PathExpression | Literal;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
         escaped: boolean;
         strip: StripFlags;
     }
@@ -36,7 +38,7 @@ export namespace AST {
         type: "Decorator";
         path: PathExpression | Literal;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
         escaped: boolean;
         strip: StripFlags;
     }
@@ -45,11 +47,11 @@ export namespace AST {
         type: "BlockStatement";
         path: PathExpression;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
         program: Program;
-        inverse: Program;
+        inverse?: Program;
         openStrip: StripFlags;
-        inverseStrip: StripFlags;
+        inverseStrip?: StripFlags;
         closeStrip: StripFlags;
     }
 
@@ -57,11 +59,9 @@ export namespace AST {
         type: "DecoratorBlock";
         path: PathExpression;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
         program: Program;
-        inverse: Program;
         openStrip: StripFlags;
-        inverseStrip: StripFlags;
         closeStrip: StripFlags;
     }
 
@@ -69,7 +69,7 @@ export namespace AST {
         type: "PartialStatement";
         name: PathExpression | SubExpression;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
         indent: string;
         strip: StripFlags;
     }
@@ -78,7 +78,7 @@ export namespace AST {
         type: "PartialBlockStatement";
         name: PathExpression | SubExpression;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
         program: Program;
         openStrip: StripFlags;
         closeStrip: StripFlags;
@@ -87,7 +87,7 @@ export namespace AST {
     export interface ContentStatement extends Statement {
         type: "ContentStatement";
         value: string;
-        original: StripFlags;
+        original: string;
     }
 
     export interface CommentStatement extends Statement {
@@ -102,7 +102,7 @@ export namespace AST {
         type: "SubExpression";
         path: PathExpression;
         params: Expression[];
-        hash: Hash;
+        hash?: Hash;
     }
 
     export interface PathExpression extends Expression {
