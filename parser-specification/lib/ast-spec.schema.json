@@ -1,0 +1,297 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://handlebarsjs.com/schema/spec/ast-spec.schema.json",
+    "title": "Handlebars Parser Testcase",
+    "description": "A testcase for the Handlebars.js parser",
+    "type": "object",
+    "properties": {
+        "description": { "type": "string" },
+        "template": { "type": "string" },
+        "expectedAst": { "$ref": "#/definitions/Program" }
+    },
+    "required": ["template", "expectedAst"],
+    "definitions": {
+        "Program": {
+            "type": "object",
+            "properties": {
+                "type": { "const": "Program" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "body": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/AnyStatement" }
+                },
+                "strip": {
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false,
+            "required": ["type", "body", "loc"]
+        },
+        "AnyStatement": {
+            "anyOf": [
+                { "$ref": "#/definitions/MustacheStatement" },
+                { "$ref": "#/definitions/BlockStatement" },
+                { "$ref": "#/definitions/Decorator" },
+                { "$ref": "#/definitions/DecoratorBlock" },
+                { "$ref": "#/definitions/PartialStatement" },
+                { "$ref": "#/definitions/PartialBlockStatement" },
+                { "$ref": "#/definitions/CommentStatement" },
+                { "$ref": "#/definitions/ContentStatement" }
+            ]
+        },
+        "MustacheStatement": {
+            "properties": {
+                "type": { "const": "MustacheStatement" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "path": { "$ref": "#/definitions/PathExpressionOrLiteral" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "escaped": { "type": "boolean" },
+                "strip": { "$ref": "#/definitions/StripFlags" },
+                "hash": { "$ref": "#/definitions/Hash" }
+            },
+            "required": ["type", "loc", "path", "params", "strip", "escaped"],
+            "additionalProperties": false
+        },
+        "BlockStatement": {
+            "properties": {
+                "type": { "const": "BlockStatement" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "path": { "$ref": "#/definitions/PathExpression" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "hash": { "$ref": "#/definitions/Hash" },
+                "program": { "$ref": "#/definitions/Program" },
+                "inverse": { "$ref": "#/definitions/Program" },
+                "openStrip": { "$ref": "#/definitions/StripFlags" },
+                "closeStrip": { "$ref": "#/definitions/StripFlags" },
+                "inverseStrip": { "$ref": "#/definitions/StripFlags" }
+            },
+            "required": ["type", "loc", "path", "params", "openStrip", "closeStrip", "program"],
+            "additionalProperties": false
+        },
+        "PartialStatement": {
+            "properties": {
+                "type": { "const": "PartialStatement" },
+                "name": { "$ref": "#/definitions/PathOrSubExpression" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "hash": { "$ref": "#/definitions/Hash" },
+                "indent": { "type": "string" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "strip": { "$ref": "#/definitions/StripFlags" }
+            },
+            "required": ["type", "loc", "name", "params", "indent", "strip"],
+            "additionalProperties": false
+        },
+        "PartialBlockStatement": {
+            "properties": {
+                "type": { "const": "PartialBlockStatement" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "name": { "$ref": "#/definitions/PathOrSubExpression" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "hash": { "$ref": "#/definitions/Hash" },
+                "program": { "$ref": "#/definitions/Program" },
+                "openStrip": { "$ref": "#/definitions/StripFlags" },
+                "closeStrip": { "$ref": "#/definitions/StripFlags" }
+            },
+            "required": ["type", "loc", "name", "params", "program", "openStrip", "closeStrip"],
+            "additionalProperties": false
+        },
+        "Decorator": {
+            "properties": {
+                "type": { "const": "Decorator" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "path": { "$ref": "#/definitions/PathExpressionOrLiteral" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "escaped": { "type": "boolean" },
+                "strip": { "$ref": "#/definitions/StripFlags" },
+                "hash": { "$ref": "#/definitions/Hash" }
+            },
+            "required": ["type", "loc", "path", "params", "strip", "escaped"],
+            "additionalProperties": false
+        },
+        "DecoratorBlock": {
+            "properties": {
+                "type": { "const": "DecoratorBlock" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "path": { "$ref": "#/definitions/PathExpression" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "hash": { "$ref": "#/definitions/Hash" },
+                "program": { "$ref": "#/definitions/Program" },
+                "openStrip": { "$ref": "#/definitions/StripFlags" },
+                "closeStrip": { "$ref": "#/definitions/StripFlags" }
+            },
+            "required": ["type", "name", "params", "program", "openStrip", "closeStrip"],
+            "additionalProperties": false
+        },
+        "ContentStatement": {
+            "properties": {
+                "type": { "const": "ContentStatement" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "value": { "type": "string" },
+                "original": { "type": "string" },
+                "strip": { "$ref": "#/definitions/StripFlags" }
+            },
+            "required": ["type", "loc", "value", "original"],
+            "additionalProperties": false
+        },
+        "CommentStatement": {
+            "properties": {
+                "type": { "const": "CommentStatement" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "value": { "type": "string" },
+                "original": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "ExpressionList": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/AnyExpression" }
+        },
+        "PathOrSubExpression": {
+            "anyOf": [{ "$ref": "#/definitions/PathExpression" }, { "$ref": "#/definitions/SubExpression" }]
+        },
+        "PathExpressionOrLiteral": {
+            "anyOf": [{ "$ref": "#/definitions/PathExpression" }, { "$ref": "#/definitions/AnyLiteral" }]
+        },
+        "AnyExpression": {
+            "anyOf": [
+                { "$ref": "#/definitions/PathExpression" },
+                { "$ref": "#/definitions/SubExpression" },
+                { "$ref": "#/definitions/AnyLiteral" }
+            ]
+        },
+        "PathExpression": {
+            "properties": {
+                "type": { "const": "PathExpression" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "data": { "type": "boolean" },
+                "depth": { "type": "number" },
+                "parts": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "original": { "type": "string" }
+            },
+            "required": ["type", "loc", "data", "depth", "parts", "original"],
+            "additionalProperties": false
+        },
+        "SubExpression": {
+            "properties": {
+                "type": { "const": "SubExpression" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "path": { "$ref": "#/definitions/PathExpression" },
+                "params": { "$ref": "#/definitions/ExpressionList" },
+                "hash": { "$ref": "#/definitions/Hash" }
+            },
+            "required": ["type", "loc", "path", "params"],
+            "additionalProperties": false
+        },
+        "AnyLiteral": {
+            "anyOf": [
+                { "$ref": "#/definitions/BooleanLiteral" },
+                { "$ref": "#/definitions/StringLiteral" },
+                { "$ref": "#/definitions/NumberLiteral" },
+                { "$ref": "#/definitions/NullLiteral" },
+                { "$ref": "#/definitions/UndefinedLiteral" }
+            ]
+        },
+        "BooleanLiteral": {
+            "properties": {
+                "type": { "const": "BooleanLiteral" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "value": { "type": "boolean" },
+                "original": { "type": "boolean" }
+            },
+            "required": ["type", "loc", "value", "original"],
+            "additionalProperties": false
+        },
+        "StringLiteral": {
+            "properties": {
+                "type": { "const": "BooleanLiteral" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "value": { "type": "string" },
+                "original": { "type": "string" }
+            },
+            "required": ["type", "loc", "value", "original"],
+            "additionalProperties": false
+        },
+        "NumberLiteral": {
+            "properties": {
+                "type": { "const": "NumberLiteral" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "value": { "type": "number" },
+                "original": { "type": "number" }
+            },
+            "required": ["type", "loc", "value", "original"],
+            "additionalProperties": false
+        },
+        "NullLiteral": {
+            "properties": {
+                "type": { "const": "NullLiteral" },
+                "loc": { "$ref": "#/definitions/SourceLocation" }
+            },
+            "required": ["type", "loc", "value", "original"],
+            "additionalProperties": false
+        },
+        "UndefinedLiteral": {
+            "properties": {
+                "type": {
+                    "const": "UndefinedLiteral"
+                },
+                "loc": {
+                    "$ref": "#/definitions/SourceLocation"
+                }
+            },
+            "required": ["type", "loc", "value", "original"],
+            "additionalProperties": false
+        },
+        "Hash": {
+            "properties": {
+                "type": { "const": "Hash" },
+                "loc": { "$ref": "#/definitions/SourceLocation" },
+                "pairs": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/HashPair" }
+                }
+            },
+            "required": ["type", "loc", "pairs"],
+            "additionalProperties": false
+        },
+        "HashPair": {
+            "properties": {
+                "type": { "const": "HashPair" },
+                "key": { "type": "string" },
+                "value": { "$ref": "#/definitions/AnyExpression" }
+            },
+            "required": ["type", "key", "value"],
+            "additionalProperties": false
+        },
+        "StripFlags": {
+            "properties": {
+                "open": { "type": "boolean" },
+                "close": { "type": "boolean" }
+            },
+            "required": ["open", "close"],
+            "additionalProperties": false
+        },
+        "SourceLocation": {
+            "properties": {
+                "source": {
+                    "type": "string",
+                    "description": "The name of the source-file of this node"
+                },
+                "start": { "$ref": "#/definitions/Position" },
+                "end": { "$ref": "#/definitions/Position" }
+            },
+            "additionalProperties": false,
+            "required": ["start", "end"]
+        },
+        "Position": {
+            "properties": {
+                "line": { "type": "number" },
+                "column": { "type": "number" }
+            },
+            "additionalProperties": false,
+            "required": ["line", "column"]
+        }
+    }
+}

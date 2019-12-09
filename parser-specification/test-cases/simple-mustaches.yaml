@@ -1,0 +1,43 @@
+description: "Simple expression"
+template: "{{test}}"
+expectedAst:
+    type: Program
+    loc:
+        start:
+            line: 1
+            column: 0
+        end:
+            line: 1
+            column: 8
+        source: test.hbs
+    body:
+        - type: MustacheStatement
+          loc:
+              start:
+                  line: 1
+                  column: 0
+              end:
+                  line: 1
+                  column: 8
+              source: test.hbs
+          escaped: true
+          params: []
+          path:
+              type: PathExpression
+              loc:
+                  start:
+                      line: 1
+                      column: 2
+                  end:
+                      line: 1
+                      column: 6
+                  source: test.hbs
+              data: false
+              depth: 0
+              original: test
+              parts:
+                  - test
+          strip:
+              close: false
+              open: false
+    strip: {}

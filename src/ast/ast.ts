@@ -7,6 +7,7 @@ export namespace AST {
 
     export interface Program extends Node {
         body: Statement[];
+        strip?: {};
     }
 
     export interface Statement extends Node {}

@@ -1,0 +1,40 @@
+description: "Partial call"
+template: "{{1}}"
+expectedAst:
+    type: Program
+    loc:
+        start:
+            line: 1
+            column: 0
+        end:
+            line: 1
+            column: 5
+        source: test.hbs
+    body:
+        - type: MustacheStatement
+          loc:
+              start:
+                  line: 1
+                  column: 0
+              end:
+                  line: 1
+                  column: 5
+              source: test.hbs
+          escaped: true
+          params: []
+          path:
+              type: NumberLiteral
+              loc:
+                  start:
+                      line: 1
+                      column: 2
+                  end:
+                      line: 1
+                      column: 3
+                  source: test.hbs
+              original: 1
+              value: 1
+          strip:
+              close: false
+              open: false
+    strip: {}
