@@ -11,6 +11,7 @@
     "@types/glob": "^7.1.1",
     "@types/jest": "^24.0.20",
     "@types/js-yaml": "^3.12.1",
+    "@types/prettier": "^1.19.0",
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",
     "ajv": "^6.10.2",
@@ -26,6 +27,7 @@
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.5.4",
     "typescript": "^3.6.4"
   },
   "scripts": {
@@ -35,7 +37,8 @@
     "lint": "eslint '**/*.{js,vue}' ",
     "format": "prettier --write 'src/**/*.{js,css,json,md,vue}'",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "regenerate-specs-with-legacy-parser": "node -r ts-node/register parser-specification/bin/regenerate-specs-with-legacy-parser.ts"
   },
   "files": [
     "build"
