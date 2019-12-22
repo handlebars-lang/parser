@@ -1,5 +1,6 @@
-description: Partial call
-template: "{{> test}}"
+description: |
+    A single dot
+template: "{{./property/subProperty}}"
 expectedAst:
     type: Program
     loc:
@@ -8,35 +9,36 @@ expectedAst:
             column: 0
         end:
             line: 1
-            column: 10
+            column: 26
         source: test.hbs
     body:
-        - type: PartialStatement
+        - type: MustacheStatement
           loc:
               start:
                   line: 1
                   column: 0
               end:
                   line: 1
-                  column: 10
+                  column: 26
               source: test.hbs
-          indent: ""
-          name:
+          escaped: true
+          params: []
+          path:
               type: PathExpression
               loc:
                   start:
                       line: 1
-                      column: 4
+                      column: 2
                   end:
                       line: 1
-                      column: 8
+                      column: 24
                   source: test.hbs
               data: false
               depth: 0
-              original: test
+              original: ./property/subProperty
               parts:
-                  - test
-          params: []
+                  - property
+                  - subProperty
           strip:
               close: false
               open: false

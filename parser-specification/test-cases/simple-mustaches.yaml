@@ -1,4 +1,4 @@
-description: "Simple expression"
+description: Simple expression
 template: "{{test}}"
 expectedAst:
     type: Program

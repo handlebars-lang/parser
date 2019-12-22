@@ -1,4 +1,5 @@
-description: "Partial call"
+description: |
+    A path expression can be a single number-literal.
 template: "{{1}}"
 expectedAst:
     type: Program

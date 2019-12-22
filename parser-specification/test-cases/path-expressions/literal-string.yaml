@@ -1,5 +1,6 @@
-description: Partial call
-template: "{{> test}}"
+description: |
+    A path expression can be a single string-literal.
+template: '{{"aString"}}'
 expectedAst:
     type: Program
     loc:
@@ -8,35 +9,32 @@ expectedAst:
             column: 0
         end:
             line: 1
-            column: 10
+            column: 13
         source: test.hbs
     body:
-        - type: PartialStatement
+        - type: MustacheStatement
           loc:
               start:
                   line: 1
                   column: 0
               end:
                   line: 1
-                  column: 10
+                  column: 13
               source: test.hbs
-          indent: ""
-          name:
-              type: PathExpression
+          escaped: true
+          params: []
+          path:
+              type: StringLiteral
               loc:
                   start:
                       line: 1
-                      column: 4
+                      column: 2
                   end:
                       line: 1
-                      column: 8
+                      column: 11
                   source: test.hbs
-              data: false
-              depth: 0
-              original: test
-              parts:
-                  - test
-          params: []
+              original: aString
+              value: aString
           strip:
               close: false
               open: false

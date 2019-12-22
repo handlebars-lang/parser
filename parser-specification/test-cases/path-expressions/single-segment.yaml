@@ -1,5 +1,6 @@
-description: Partial call
-template: "{{> test}}"
+description: |
+    A path expression can consist of a single segment.
+template: "{{property}}"
 expectedAst:
     type: Program
     loc:
@@ -8,35 +9,35 @@ expectedAst:
             column: 0
         end:
             line: 1
-            column: 10
+            column: 12
         source: test.hbs
     body:
-        - type: PartialStatement
+        - type: MustacheStatement
           loc:
               start:
                   line: 1
                   column: 0
               end:
                   line: 1
-                  column: 10
+                  column: 12
               source: test.hbs
-          indent: ""
-          name:
+          escaped: true
+          params: []
+          path:
               type: PathExpression
               loc:
                   start:
                       line: 1
-                      column: 4
+                      column: 2
                   end:
                       line: 1
-                      column: 8
+                      column: 10
                   source: test.hbs
               data: false
               depth: 0
-              original: test
+              original: property
               parts:
-                  - test
-          params: []
+                  - property
           strip:
               close: false
               open: false
