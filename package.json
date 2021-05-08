@@ -20,7 +20,7 @@
     "eslint-config-prettier": "^6.5.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.7",
     "husky": "^3.0.9",
     "jest": "^24.9.0",
     "js-yaml": "^3.13.1",
